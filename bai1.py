@@ -56,36 +56,47 @@ def butter_lowpass_filter(data, cutoff, fs, order=5):
 
 if __name__ == "__main__":
     Image = np.loadtxt('4_1.asc')
-    order = 6
+    order = 5
     fs = 30.0
     cutoff = 3.667
 
-    Filtered_Image = Median_Filter(Image,7,11)
-    # Filtered_Image = butter_lowpass_filter(Filtered_Image, cutoff, fs, order)
+    Median_Filtered_Image = Median_Filter(Image,7,11)
+    Filtered_Image = butter_lowpass_filter(Median_Filtered_Image, cutoff, fs, order)
 
     Hist_ORI = get_histogram(Image)
-    Hist_CVT = get_histogram(Filtered_Image)
+    Hist_Medium_filter = get_histogram(Filtered_Image)
+    Hist_LP_Med_filter = get_histogram(Filtered_Image)
 
     fig = plt.figure(figsize=(10, 7)) #create figure
     
-    fig.add_subplot(2, 2, 1)
+    fig.add_subplot(2, 3, 1)
     plt.imshow(Image)
     plt.title('Original Image')
     plt.gray()
     
-    fig.add_subplot(2, 2, 3)
-    plt.imshow(Filtered_Image)
-    plt.title('Filtered Image')
+    fig.add_subplot(2, 3, 2)
+    plt.imshow(Median_Filtered_Image)
+    plt.title('Medium Filter')
     plt.gray()
     
-    fig.add_subplot(2, 2, 2)
+    fig.add_subplot(2, 3, 3)
+    plt.imshow(Median_Filtered_Image)
+    plt.title('Low-pass + Medium Filter')
+    plt.gray()
+    
+    fig.add_subplot(2, 3, 4)
     axis_X = np.arange(0, 256, 1)
     plt.bar(axis_X,Hist_ORI)
     plt.title('Histogram')
     
-    fig.add_subplot(2, 2, 4)
+    fig.add_subplot(2, 3, 5)
     axis_X = np.arange(0, 256, 1)
-    plt.bar(axis_X,Hist_CVT)
+    plt.bar(axis_X,Hist_Medium_filter)
     plt.title('Histogram')
-
+    
+    fig.add_subplot(2, 3, 6)
+    axis_X = np.arange(0, 256, 1)
+    plt.bar(axis_X,Hist_LP_Med_filter)
+    plt.title('Histogram')
+    
     plt.show()
